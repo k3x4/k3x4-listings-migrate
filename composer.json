@@ -1,0 +1,10 @@
+{
+	"require" : {
+		"php" : ">=7"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"k3x4\\PluginName\\" : "src"
+		}
+	}
+}
