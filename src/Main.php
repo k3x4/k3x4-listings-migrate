@@ -73,9 +73,11 @@ class Main {
 		$this->version = '1.0.0';
 		$this->loader = new utils\Loader();
 
-		$this->set_locale();
-		$this->define_admin_hooks();
-		$this->define_public_hooks();
+		// $this->set_locale();
+		// $this->define_admin_hooks();
+		// $this->define_public_hooks();
+
+		$wpcli = new WpCLI();
 
 	}
 

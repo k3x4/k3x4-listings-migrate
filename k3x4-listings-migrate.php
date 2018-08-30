@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin Name:       Plugin name
+ * Plugin Name:       K3x4 Listings Migrate
  * Plugin URI:        
  * Description:       
  * Version:           1.0.0
@@ -26,13 +26,13 @@ define( 'K3X4_LISTINGS_MIGRATE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 // We load Composer's autoload file
 require_once plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
 
-register_activation_hook( __FILE__, function(){
-	utils\Activator::activate();
-} );
+// register_activation_hook( __FILE__, function(){
+// 	utils\Activator::activate();
+// } );
 
-register_deactivation_hook( __FILE__, function() {
-	utils\Deactivator::deactivate();
-} );
+// register_deactivation_hook( __FILE__, function() {
+// 	utils\Deactivator::deactivate();
+// } );
 
 /**
  * Begins execution of the plugin.

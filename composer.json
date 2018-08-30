@@ -4,7 +4,7 @@
 	},
 	"autoload" : {
 		"psr-4" : {
-			"k3x4\\PluginName\\" : "src"
+			"k3x4\\ListingsMigrate\\" : "src"
 		}
 	}
 }
