@@ -22,19 +22,13 @@ class WpCLI{
     
             if(!file_exists($arguments['file'])){
                 WP_CLI::error( 'Cannot find file.' );
-                return;
             }
 
-            $all_rows = [];
-            $file = fopen($arguments['file'], "r");
-
-            $header = fgetcsv($file);
-            while ($row = fgetcsv($file)) {
-                $all_rows[] = array_combine($header, $row);
-            }
-            var_dump($all_rows);
+            $importArray = Tools::csvToArray($arguments['file']);
+            $user = new User();
+            $user->importUsers($importArray);
     
-            WP_CLI::success( 'Updated post title successfully.' );
+            //WP_CLI::success( 'Updated post title successfully.' );
     
         } else {
             WP_CLI::error( 'Invalid arguments.' );
