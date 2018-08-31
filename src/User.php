@@ -34,7 +34,7 @@ class User
 
         foreach ($users as $user) {
             $userdata = [
-                'user_login' => $user['user_email'],
+                'user_login' => $user['user_login'],
                 'user_pass' => '12345678',
                 'user_email' => $user['user_email'],
                 'display_name' => $user['user_email'],
@@ -49,7 +49,7 @@ class User
 
             $userdata = [
                 'ID' => $user_id,
-                'user_login' => $user['user_email'],
+                'user_login' => $user['user_login'],
                 'user_pass' => $user['user_pass'],
                 'user_nicename' => 'user' . $user_id,
                 'user_registered' => $user['user_registered'],

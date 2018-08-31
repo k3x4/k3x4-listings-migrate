@@ -79,6 +79,31 @@ class Main {
 
 		$wpcli = new WpCLI();
 
+		/*
+		Import Hooks
+
+		wp_import_categories
+		wp_import_tags
+		wp_import_terms
+		wp_import_term_meta
+		import_term_meta_key
+		wp_import_posts
+		wp_import_post_data_raw
+		wp_import_existing_post
+		wp_import_post_data_processed
+		wp_import_post_terms
+		wp_import_post_comments
+		wp_import_post_meta
+		import_post_meta_key
+		import_allow_create_users
+		import_allow_fetch_attachments
+
+		*/
+
+		$category = new Category();
+		$tag = new Tag();
+		$term = new Term();
+
 	}
 
 
@@ -133,7 +158,6 @@ class Main {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
 	}
-
 
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.
