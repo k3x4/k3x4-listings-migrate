@@ -104,6 +104,7 @@ class Main {
 		$category = new Category();
 		$tag = new Tag();
 		$term = new Term();
+		$post = new Post();
 
 	}
 

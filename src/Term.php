@@ -8,6 +8,7 @@ class Term{
 
     public function __construct(){
         add_filter('wp_import_terms', [$this, 'migrateTerms'], 10, 1);
+        add_filter('wp_import_term_meta', '__return_null', 10, 1);
     }
 
     public function migrateTerms($terms){
@@ -73,8 +74,8 @@ class Term{
                     break;
             endswitch;
         }
+        
         delete_option('listing_category_children');
-        exit();
         return null;
     }
 
