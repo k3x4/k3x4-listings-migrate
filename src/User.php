@@ -52,6 +52,8 @@ class User
                 'user_login' => $user['user_login'],
                 'user_pass' => $user['user_pass'],
                 'user_nicename' => 'user' . $user_id,
+                'user_email' => $user['user_email'],
+                'display_name' => $user['user_email'],
                 'user_registered' => $user['user_registered'],
             ];
 

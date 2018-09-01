@@ -12,7 +12,6 @@
 
 namespace k3x4\ListingsMigrate;
 
-
 /**
  * The core plugin class.
  *
@@ -76,6 +75,8 @@ class Main {
 		// $this->set_locale();
 		// $this->define_admin_hooks();
 		// $this->define_public_hooks();
+
+        add_filter('sanitize_title', ['k3x4\ListingsMigrate\Tools', 'skp_greeklish_slugs'], 1);
 
 		$wpcli = new WpCLI();
 
