@@ -68,6 +68,8 @@ class Main {
 	 */
 	public function __construct() {
 
+		//setlocale(LC_ALL, 'el_GR.UTF-8');
+
 		$this->plugin_name = 'k3x4-listings-migrate';
 		$this->version = '1.0.0';
 		$this->loader = new utils\Loader();

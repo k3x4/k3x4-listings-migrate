@@ -8,14 +8,14 @@ class Post{
         add_filter('wp_import_posts', [$this, 'filterPosts'], 10, 1);
         //add_filter('wp_import_post_data_raw', [$this, 'migratePost'], 10, 1);
         add_filter('wp_import_post_terms', [$this, 'mapCategory'], 10, 3);
-        add_filter('wp_import_post_comments', '__return_null', 10, 3);
-        add_filter('wp_import_post_meta', '__return_null', 10, 3);
+        add_filter('wp_import_post_comments', '__return_empty_array', 10, 3);
+        add_filter('wp_import_post_meta', '__return_empty_array', 10, 3);
     }
 
     public function filterPosts($posts){
         $filter = [
             'listing',
-            //'attachment'
+            'attachment'
         ];
         $posts = array_filter($posts, function($post) use ($filter){
             return in_array($post['post_type'], $filter);
@@ -48,7 +48,8 @@ class Post{
 
         array_walk($terms, function(&$item, $key) use ($map){
             if($key == 'domain' && $item){
-                $item = $map[$item];
+                $domain = $item['domain'];
+                $item['domain'] = $map[$domain];
             }
         });
 

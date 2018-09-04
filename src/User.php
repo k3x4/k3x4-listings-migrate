@@ -10,7 +10,18 @@ class User
     public function importUsers($users)
     {
         $users = $this->sortImportArrayById($users);
+        add_filter('sanitize_user', [$this, 'nonStrictLogin'], 10, 3);
         $this->importUsersToDatabase($users);
+        add_action( 'after_setup_theme', function() {
+            add_action('import_end', [$this, 'changeUsersLogin']);
+        } );
+    }
+
+    public function nonStrictLogin($username, $raw_username, $strict) {
+        if( !$strict )
+            return $username;
+
+        return sanitize_user(stripslashes($raw_username), false);
     }
 
     public function sortImportArrayById($array)
@@ -33,6 +44,10 @@ class User
         $this->userPasswordsMap = [];
 
         foreach ($users as $user) {
+            // array_walk($user, function(&$item, $key){
+            //     $item = mb_convert_encoding($item, 'UTF-8', mb_detect_encoding($item, 'UTF-8', true));
+            // });
+
             $userdata = [
                 'user_login' => $user['user_login'],
                 'user_pass' => '12345678',
@@ -54,6 +69,7 @@ class User
                 'user_nicename' => 'user' . $user_id,
                 'user_email' => $user['user_email'],
                 'display_name' => $user['user_email'],
+                'nickname' => $user['user_email'],
                 'user_registered' => $user['user_registered'],
             ];
 
@@ -62,6 +78,16 @@ class User
         }
 
         WP_CLI::success('Insert ' . $count . ' users');
+    }
+
+    public function changeUsersLogin(){
+        global $wpdb;
+        $tablename = $wpdb->prefix . "users";
+
+        $users = get_users();
+        foreach($users as $user){
+            $wpdb->update($tablename, ['user_login' => $user->user_email], ['ID' => $user->user_id]);
+        }
     }
 
 }
