@@ -67,16 +67,171 @@ class Term{
                         $parent = term_exists( $term['term_parent'], 'listing_category' );
                         if ( is_array( $parent ) ) $parent = $parent['term_id'];
                     }
-                    $aaa = $this->insertTerm( $term['term_name'], 'listing_category', [
+                    $this->insertTerm( $term['term_name'], 'listing_category', [
                         'parent' => $parent,
                         'slug'   => $term['slug']
                     ]);
                     break;
             endswitch;
         }
-        
         delete_option('listing_category_children');
+
+        $this->mapCustomFields();
+
         return null;
+    }
+
+    public function mapCustomFields(){
+        $customFields = [
+            'Τύπος'         => [
+                'oldField'  => 'webbupointfinder_item_field_proptype',
+                'type'      => 'select',
+                'options'   => [
+                    'values' => [
+                        '1' => 'Studio / Γκαρσονιέρα',
+                        '2' => 'Διαμέρισμα',
+                        '3' => 'Μεζονέτα',
+                        '4' => 'Μονοκατοικία',
+                    ],
+                    'label' => 'Τύπος',
+                    'default' => '1'
+                ]
+            ],
+            'Τιμή'          => [
+                'oldField'  => 'webbupointfinder_item_field283070149872418420000',
+                'type'      => 'number',
+                'options'   => [
+                    'label' => 'Τιμή',
+                    'placeholder' => 'Τιμή',
+                    'prefix' => null,
+                    'suffix' => '€',
+                    'default' => null
+                ]
+            ],
+            'Όροφος'        => [
+                'oldField'  => 'webbupointfinder_item_field70165663575622040000',
+                'type'      => 'select',
+                'options'   => [
+                    'values' => [
+                        ''  => 'Επιλέξτε',
+                        '1' => 'Υπόγειο',
+                        '2' => 'Ημιυπόγειο',
+                        '3' => 'Ισόγειο',
+                        '4' => 'Ημιώροφος',
+                        '5' => '1ος',
+                        '6' => '2ος',
+                        '7' => '3ος',
+                        '8' => '4ος',
+                        '9' => '5ος',
+                        '10' => '6ος',
+                        '11' => '7ος',
+                        '12' => '8ος',
+                        '13' => '9ος',
+                        '14' => '10ος',
+                    ],
+                    'label' => 'Όροφος',
+                    'default' => null
+                ]
+            ],
+            'Τετρ. Μέτρα'   => [
+                'oldField'  => 'webbupointfinder_item_field287084981110235630000',
+                'type'      => 'number',
+                'options'   => [
+                    'label' => 'Τετρ. Μέτρα',
+                    'placeholder' => 'Τετρ. Μέτρα',
+                    'prefix' => null,
+                    'suffix' => 'τμ',
+                    'default' => null
+                ]
+            ],
+            'Δωμάτια'       => [
+                'oldField'  => 'webbupointfinder_item_field930250379806436500000',
+                'type'      => 'number',
+                'options'   => [
+                    'label' => 'Δωμάτια',
+                    'placeholder' => 'Δωμάτια',
+                    'prefix' => null,
+                    'suffix' => null,
+                    'default' => null
+                ]
+            ],
+            'Θέρμανση'      => [
+                'oldField'  => 'webbupointfinder_item_field377217164104565400000',
+                'type'      => 'select',
+                'options'   => [
+                    'values' => [
+                        '1' => 'Χωρίς Θέρμανση',
+                        '2' => 'Με κλιματιστικά',
+                        '3' => 'Αυτόνομη θέρμανση',
+                        '4' => 'Κεντρική θέρμανση',
+                        '5' => 'Θέρμανση με χρήση υγραερίου',
+                        '6' => 'Σόμπα',
+                        '7' => 'Θερμοσυσσωρευτής',
+                    ],
+                    'label' => 'Θέρμανση',
+                    'default' => '1'
+                ]
+            ],
+            'Διεύθυνση'     => [
+                'oldField'  => 'webbupointfinder_item_field454305059116910000000',
+                'type'      => 'text',
+                'options'   => [
+                    'label' => 'Διεύθυνση',
+                    'prefix' => null,
+                    'suffix' => null,
+                    'placeholder' => 'Διεύθυνση',
+                    'default' => null,
+                ]
+            ]
+        ];
+
+        $fieldGroupId = $this->insertTerm('Ακίνητο', 'field_group');
+
+        $attachCategories = [
+            'Ενοικίαση γραφείου',
+            'Ενοικίαση Επαγγελματικού Χώρου',
+            'Ενοικίαση Κατοικίας',
+            'Πώληση Επαγγελματικού Χώρου',
+            'Πώληση Κατοικίας'
+        ];
+        
+        $categories = get_terms([
+            'taxonomy' => 'listing_category',
+            'name' => $attachCategories,
+            'hide_empty' => false,
+        ]);
+        
+        $categories = array_map(function($item){
+            return $item->slug;
+        }, $categories);
+
+        add_term_meta($fieldGroupId, 'field_group_categories', $categories);
+
+        foreach($customFields as $fieldTitle => $fieldArray){
+            $meta_input = [
+                'field_type' => $fieldArray['type'],
+                //'field_id' => $fieldArray['type']
+                'field_label' => $fieldArray['options']['label'],
+                'field_default' => $fieldArray['options']['default']
+            ];
+            if(isset($fieldArray['options']['values'])){
+                $options = [];
+                foreach($fieldArray['options']['values'] as $key => $value){
+                    $options[] = $key . '|' . $value;
+                }
+                $meta_input['field_options'] = $options;
+            }
+            $fieldId = wp_insert_post([
+                'post_title'    => $fieldTitle,
+                'post_status'   => 'publish',
+                'post_type'     => 'field',
+                'post_author'   => 1,
+                'meta_input' => $meta_input
+            ]);
+            wp_set_object_terms($fieldId, $fieldGroupId, 'field_group');
+        }
+
+
     }
 
     public function insertTerm($term, $taxonomy, $args = []){

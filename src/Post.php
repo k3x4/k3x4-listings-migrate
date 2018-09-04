@@ -2,6 +2,8 @@
 
 namespace k3x4\ListingsMigrate;
 
+use WP_CLI;
+
 class Post{
 
     public function __construct(){
@@ -9,7 +11,8 @@ class Post{
         //add_filter('wp_import_post_data_raw', [$this, 'migratePost'], 10, 1);
         add_filter('wp_import_post_terms', [$this, 'mapCategory'], 10, 3);
         add_filter('wp_import_post_comments', '__return_empty_array', 10, 3);
-        add_filter('wp_import_post_meta', '__return_empty_array', 10, 3);
+        //add_filter('wp_import_post_meta', [$this, 'mapListingMeta'], 10, 3);
+        add_filter('import_post_meta_key', [$this, 'allowedMeta'], 10, 3);
 
         $users = new User();
         add_action('import_end', [$users, 'changeUsersLogin']);
@@ -57,6 +60,30 @@ class Post{
         });
 
         return $terms;
+    }
+
+    public function allowedMeta($meta_key, $post_id, $post){
+        $filter = [
+            '_edit_last',
+            '_thumbnail_id'
+        ];
+
+        if(in_array($meta_key, $filter)){
+            return $meta_key;
+        }
+
+        return null;
+    }
+
+    public function insertTerm($term, $taxonomy, $args = []){
+        $newTerm = wp_insert_term($term, $taxonomy, $args);
+
+        if (is_wp_error($newTerm)) {
+            WP_CLI::warning("Error term created (" . $term . "): " . $newTerm->get_error_message() . PHP_EOL);
+            return null;
+        }
+
+        return $newTerm['term_id'];
     }
 
 }
