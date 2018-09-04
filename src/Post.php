@@ -10,6 +10,9 @@ class Post{
         add_filter('wp_import_post_terms', [$this, 'mapCategory'], 10, 3);
         add_filter('wp_import_post_comments', '__return_empty_array', 10, 3);
         add_filter('wp_import_post_meta', '__return_empty_array', 10, 3);
+
+        $users = new User();
+        add_action('import_end', [$users, 'changeUsersLogin']);
     }
 
     public function filterPosts($posts){
