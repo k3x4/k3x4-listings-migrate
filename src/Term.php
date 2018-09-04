@@ -113,7 +113,6 @@ class Term{
                 'type'      => 'select',
                 'options'   => [
                     'values' => [
-                        ''  => 'Επιλέξτε',
                         '1' => 'Υπόγειο',
                         '2' => 'Ημιυπόγειο',
                         '3' => 'Ισόγειο',
@@ -208,16 +207,18 @@ class Term{
         add_term_meta($fieldGroupId, 'field_group_categories', $categories);
 
         foreach($customFields as $fieldTitle => $fieldArray){
+            //$groupSlug = 
+            $fieldId = $groupSlug . '_' . $fieldSlug;
             $meta_input = [
                 'field_type' => $fieldArray['type'],
-                //'field_id' => $fieldArray['type']
+                'field_id' => $fieldId,
                 'field_label' => $fieldArray['options']['label'],
                 'field_default' => $fieldArray['options']['default']
             ];
             if(isset($fieldArray['options']['values'])){
-                $options = [];
+                $options = '';
                 foreach($fieldArray['options']['values'] as $key => $value){
-                    $options[] = $key . '|' . $value;
+                    $options .= $key . '|' . $value . PHP_EOL;
                 }
                 $meta_input['field_options'] = $options;
             }
