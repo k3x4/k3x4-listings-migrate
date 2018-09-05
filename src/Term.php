@@ -86,6 +86,7 @@ class Term{
             'Τύπος'         => [
                 'oldField'  => 'webbupointfinder_item_field_proptype',
                 'type'      => 'select',
+                'id'        => 'real-estate_type',
                 'options'   => [
                     'values' => [
                         '1' => 'Studio / Γκαρσονιέρα',
@@ -100,6 +101,7 @@ class Term{
             'Τιμή'          => [
                 'oldField'  => 'webbupointfinder_item_field283070149872418420000',
                 'type'      => 'number',
+                'id'        => 'real-estate_price',
                 'options'   => [
                     'label' => 'Τιμή',
                     'placeholder' => 'Τιμή',
@@ -111,6 +113,7 @@ class Term{
             'Όροφος'        => [
                 'oldField'  => 'webbupointfinder_item_field70165663575622040000',
                 'type'      => 'select',
+                'id'        => 'real-estate_floor',
                 'options'   => [
                     'values' => [
                         '1' => 'Υπόγειο',
@@ -135,6 +138,7 @@ class Term{
             'Τετρ. Μέτρα'   => [
                 'oldField'  => 'webbupointfinder_item_field287084981110235630000',
                 'type'      => 'number',
+                'id'        => 'real-estate_size',
                 'options'   => [
                     'label' => 'Τετρ. Μέτρα',
                     'placeholder' => 'Τετρ. Μέτρα',
@@ -146,6 +150,7 @@ class Term{
             'Δωμάτια'       => [
                 'oldField'  => 'webbupointfinder_item_field930250379806436500000',
                 'type'      => 'number',
+                'id'        => 'real-estate_rooms',
                 'options'   => [
                     'label' => 'Δωμάτια',
                     'placeholder' => 'Δωμάτια',
@@ -157,6 +162,7 @@ class Term{
             'Θέρμανση'      => [
                 'oldField'  => 'webbupointfinder_item_field377217164104565400000',
                 'type'      => 'select',
+                'id'        => 'real-estate_heating',
                 'options'   => [
                     'values' => [
                         '1' => 'Χωρίς Θέρμανση',
@@ -174,6 +180,7 @@ class Term{
             'Διεύθυνση'     => [
                 'oldField'  => 'webbupointfinder_item_field454305059116910000000',
                 'type'      => 'text',
+                'id'        => 'real-estate_address',
                 'options'   => [
                     'label' => 'Διεύθυνση',
                     'prefix' => null,
@@ -207,21 +214,23 @@ class Term{
         add_term_meta($fieldGroupId, 'field_group_categories', $categories);
 
         foreach($customFields as $fieldTitle => $fieldArray){
-            //$groupSlug = 
-            $fieldId = $groupSlug . '_' . $fieldSlug;
             $meta_input = [
                 'field_type' => $fieldArray['type'],
-                'field_id' => $fieldId,
-                'field_label' => $fieldArray['options']['label'],
-                'field_default' => $fieldArray['options']['default']
+                'field_id' => $fieldArray['id'],
             ];
             if(isset($fieldArray['options']['values'])){
-                $options = '';
+                $options = [];
                 foreach($fieldArray['options']['values'] as $key => $value){
-                    $options .= $key . '|' . $value . PHP_EOL;
+                    $options[] = $key . '|' . $value;
                 }
-                $meta_input['field_options'] = $options;
+                $meta_input['field_options'] = implode(PHP_EOL, $options);
             }
+            $meta_input = $this->optionsFieldExists($fieldArray, 'label', $meta_input);
+            $meta_input = $this->optionsFieldExists($fieldArray, 'default', $meta_input);
+            $meta_input = $this->optionsFieldExists($fieldArray, 'placeholder', $meta_input);
+            $meta_input = $this->optionsFieldExists($fieldArray, 'prefix', $meta_input);
+            $meta_input = $this->optionsFieldExists($fieldArray, 'suffix', $meta_input);
+
             $fieldId = wp_insert_post([
                 'post_title'    => $fieldTitle,
                 'post_status'   => 'publish',
@@ -233,6 +242,13 @@ class Term{
         }
 
 
+    }
+
+    public function optionsFieldExists($options, $name, $result){
+        if(isset($options['options'][$name]) && $options['options'][$name]){
+            $result['field_' . $name] = $options['options'][$name];
+        }
+        return $result;
     }
 
     public function insertTerm($term, $taxonomy, $args = []){
