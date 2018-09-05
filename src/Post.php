@@ -83,6 +83,8 @@ class Post{
         $this->mapFeatures($postmeta, $post_id, $post);
         $this->mapCustomFields($postmeta, $post_id, $post);
         $this->mapGalleryImages($postmeta, $post_id, $post);
+        $this->mapViews($postmeta, $post_id, $post);
+        $this->mapCustomBoxes($postmeta, $post_id, $post);
 
         return $postmeta;
     }
@@ -111,12 +113,39 @@ class Post{
         foreach($postmeta as $meta){
             if($meta['key'] == 'webbupointfinder_item_images'){
                 $image_attributes = wp_get_attachment_image_src($meta['value']);
-                $images[$meta['value']] = current($image_attributes);
+                if($image_attributes){
+                    $images[$meta['value']] = current($image_attributes);
+                }
             }
         }
         if(!empty($images)){
             $images = array_reverse($images, true);
             add_post_meta($post_id, 'listing-gallery-images', $images);
+        }
+    }
+
+    public function mapViews($postmeta, $post_id, $post){
+        foreach($postmeta as $meta){
+            if($meta['key'] == 'views'){
+                add_post_meta($post_id, 'listing-views', $meta['value']);
+                break;
+            }
+        }
+    }
+
+    public function mapCustomBoxes($postmeta, $post_id, $post){
+        $customBoxes = [
+            'webbupointfinder_item_custombox1',
+            'webbupointfinder_item_custombox2',
+            'webbupointfinder_item_custombox3',
+            'webbupointfinder_item_custombox4',
+        ];
+        foreach($postmeta as $meta){
+            if(in_array($meta['key'], $customBoxes)){
+                $parts = explode('_', $meta['key']);
+                add_post_meta($post_id, 'listing-' . end($parts), $meta['value']);
+                break;
+            }
         }
     }
 
