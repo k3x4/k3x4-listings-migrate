@@ -11,11 +11,10 @@ class Post{
         //add_filter('wp_import_post_data_raw', [$this, 'migratePost'], 10, 1);
         add_filter('wp_import_post_terms', [$this, 'mapCategory'], 10, 3);
         add_filter('wp_import_post_comments', '__return_empty_array', 10, 3);
-        //add_filter('wp_import_post_meta', [$this, 'mapListingMeta'], 10, 3);
+        add_filter('wp_import_post_meta', [$this, 'mapListingMeta'], 10, 3);
         add_filter('import_post_meta_key', [$this, 'allowedMeta'], 10, 3);
 
-        $users = new User();
-        add_action('import_end', [$users, 'changeUsersLogin']);
+        add_action('import_end', [$this, 'importEndActions']);
     }
 
     public function filterPosts($posts){
@@ -39,19 +38,21 @@ class Post{
             return $terms;
         }
 
+        $this->importFeatures($terms, $post_id);
+
         $filter = [
             'pointfinderltypes',
         ];
         $terms = array_filter($terms, function($term) use ($filter){
             return in_array($term['domain'], $filter);
         });
+        $terms = array_values($terms);
 
         $map = [
             'pointfinderltypes' => 'listing_category'
         ];
 
-        //var_dump($terms);exit();
-
+        // MAP LISTING CATEGORY
         array_walk($terms, function(&$item, $key) use ($map){
             if($key == 'domain' && $item){
                 $domain = $item['domain'];
@@ -60,6 +61,48 @@ class Post{
         });
 
         return $terms;
+    }
+
+    public function importFeatures($terms, $post_id){
+        $filter = [
+            'pointfinderfeatures',
+        ];
+        $terms = array_filter($terms, function($term) use ($filter){
+            return in_array($term['domain'], $filter);
+        });
+        $terms = array_values($terms);
+
+        if(count($terms)){
+            foreach($terms as $term){
+                add_post_meta($post_id, 'feature_' . $term['slug'], 'on');
+            }
+        }
+    }
+
+    public function mapListingMeta($postmeta, $post_id, $post){
+        $this->mapFeatures($postmeta, $post_id, $post);
+        $this->mapCustomFields($postmeta, $post_id, $post);
+
+        return $postmeta;
+    }
+
+    public function mapFeatures($postmeta, $post_id, $post){
+        foreach($postmeta as $meta){
+            $metaKey = $meta['key'];
+            if(isset($oldFields[$metaKey])){
+                add_post_meta($post_id, $oldFields[$metaKey], $meta['value']);
+            }
+        }
+    }
+
+    public function mapCustomFields($postmeta, $post_id, $post){
+        $oldFields = get_option('old_fields_migrate');
+        foreach($postmeta as $meta){
+            $metaKey = $meta['key'];
+            if(isset($oldFields[$metaKey])){
+                add_post_meta($post_id, $oldFields[$metaKey], $meta['value']);
+            }
+        }
     }
 
     public function allowedMeta($meta_key, $post_id, $post){
@@ -84,6 +127,13 @@ class Post{
         }
 
         return $newTerm['term_id'];
+    }
+
+    public function importEndActions(){
+        $users = new User();
+        $users->changeUsersLogin();
+
+        delete_option('old_fields_migrate');
     }
 
 }

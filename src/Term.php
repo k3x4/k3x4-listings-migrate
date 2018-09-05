@@ -46,12 +46,13 @@ class Term{
             'Υδραυλικό τιμόνι'                      => $autoId,
             'Υποβοήθηση φρένων'                     => $autoId,
         ];
-        
+
         foreach($terms as $term){
             switch($term['term_taxonomy']):
                 case 'pointfinderfeatures':
                     $postId = wp_insert_post([
                         'post_title'    => $term['term_name'],
+                        'post_name'     => $term['slug'],
                         'post_status'   => 'publish',
                         'post_type'     => 'feature',
                         'post_author'   => 1
@@ -75,6 +76,19 @@ class Term{
             endswitch;
         }
         delete_option('listing_category_children');
+
+        $this->attachGroupToCategories($houseId, 'feature_group_categories', [
+            'Ενοικίαση γραφείου',
+            'Ενοικίαση Επαγγελματικού Χώρου',
+            'Ενοικίαση Κατοικίας',
+            'Πώληση Επαγγελματικού Χώρου',
+            'Πώληση Κατοικίας'
+        ]);
+
+        $this->attachGroupToCategories($autoId, 'feature_group_categories', [
+            'Αυτοκίνητα',
+            'Επαγγελματικά',
+        ]);
 
         $this->mapCustomFields();
 
@@ -193,26 +207,15 @@ class Term{
 
         $fieldGroupId = $this->insertTerm('Ακίνητο', 'field_group');
 
-        $attachCategories = [
+        $this->attachGroupToCategories($fieldGroupId, 'field_group_categories', [
             'Ενοικίαση γραφείου',
             'Ενοικίαση Επαγγελματικού Χώρου',
             'Ενοικίαση Κατοικίας',
             'Πώληση Επαγγελματικού Χώρου',
             'Πώληση Κατοικίας'
-        ];
-        
-        $categories = get_terms([
-            'taxonomy' => 'listing_category',
-            'name' => $attachCategories,
-            'hide_empty' => false,
         ]);
-        
-        $categories = array_map(function($item){
-            return $item->slug;
-        }, $categories);
 
-        add_term_meta($fieldGroupId, 'field_group_categories', $categories);
-
+        $mapOldFields = [];
         foreach($customFields as $fieldTitle => $fieldArray){
             $meta_input = [
                 'field_type' => $fieldArray['type'],
@@ -239,9 +242,25 @@ class Term{
                 'meta_input' => $meta_input
             ]);
             wp_set_object_terms($fieldId, $fieldGroupId, 'field_group');
+
+            $mapOldFields[$fieldArray['oldField']] = $fieldArray['id'];
         }
 
+        add_option('old_fields_migrate', $mapOldFields);
+    }
 
+    public function attachGroupToCategories($fieldGroupId, $metaKey, $attachCategories){
+        $categories = get_terms([
+            'taxonomy' => 'listing_category',
+            'name' => $attachCategories,
+            'hide_empty' => false,
+        ]);
+        
+        $categories = array_map(function($item){
+            return $item->slug;
+        }, $categories);
+
+        add_term_meta($fieldGroupId, $metaKey, $categories);
     }
 
     public function optionsFieldExists($options, $name, $result){
