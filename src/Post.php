@@ -82,6 +82,7 @@ class Post{
     public function mapListingMeta($postmeta, $post_id, $post){
         $this->mapFeatures($postmeta, $post_id, $post);
         $this->mapCustomFields($postmeta, $post_id, $post);
+        $this->mapGalleryImages($postmeta, $post_id, $post);
 
         return $postmeta;
     }
@@ -102,6 +103,20 @@ class Post{
             if(isset($oldFields[$metaKey])){
                 add_post_meta($post_id, $oldFields[$metaKey], $meta['value']);
             }
+        }
+    }
+
+    public function mapGalleryImages($postmeta, $post_id, $post){
+        $images = [];
+        foreach($postmeta as $meta){
+            if($meta['key'] == 'webbupointfinder_item_images'){
+                $image_attributes = wp_get_attachment_image_src($meta['value']);
+                $images[$meta['value']] = current($image_attributes);
+            }
+        }
+        if(!empty($images)){
+            $images = array_reverse($images, true);
+            add_post_meta($post_id, 'listing-gallery-images', $images);
         }
     }
 
