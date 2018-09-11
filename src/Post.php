@@ -112,7 +112,7 @@ class Post{
         $images = [];
         foreach($postmeta as $meta){
             if($meta['key'] == 'webbupointfinder_item_images'){
-                $image_attributes = wp_get_attachment_image_src($meta['value'], 'full');
+                $image_attributes = wp_get_attachment_image_src($meta['value']);
                 if($image_attributes){
                     $images[$meta['value']] = current($image_attributes);
                 }
