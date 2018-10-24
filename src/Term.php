@@ -47,6 +47,17 @@ class Term{
             'Υποβοήθηση φρένων'                     => $autoId,
         ];
 
+        $categoryIcons = [
+            'Auto – Moto'               => 'fa fa-truck',
+            'Ακίνητα'                   => 'fa fa-key',
+            'Εκπαίδευση'                => 'fa fa-graduation-cap',
+            'Επιχειρήσεις – Εξοπλισμός' => 'fa fa-coffee',
+            'Εργασία'                   => 'fa fa-euro',
+            'Πωλούνται'                 => 'fa fa-shopping-cart',
+            'Υπηρεσίες'                 => 'fa fa-cog',
+            'Χαρίζονται'                => 'fa fa-gift',
+        ];
+
         foreach($terms as $term){
             switch($term['term_taxonomy']):
                 case 'pointfinderfeatures':
@@ -68,10 +79,13 @@ class Term{
                         $parent = term_exists( $term['term_parent'], 'listing_category' );
                         if ( is_array( $parent ) ) $parent = $parent['term_id'];
                     }
-                    $this->insertTerm( $term['term_name'], 'listing_category', [
+                    $newTermId = $this->insertTerm( $term['term_name'], 'listing_category', [
                         'parent' => $parent,
                         'slug'   => $term['slug']
                     ]);
+                    if(isset($categoryIcons[$term['term_name']])){
+                        add_term_meta($newTermId, 'listing_category_meta', $categoryIcons[$term['term_name']]);
+                    }
                     break;
             endswitch;
         }
