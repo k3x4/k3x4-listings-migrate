@@ -282,7 +282,10 @@ class Term{
             return $item->slug;
         }, $categories);
 
-        add_term_meta($fieldGroupId, $metaKey, $categories);
+        //add_term_meta($fieldGroupId, $metaKey, $categories);
+        foreach($categories as $category){
+            add_term_meta($fieldGroupId, $metaKey . '_' . $category, $category);
+        }
     }
 
     public function optionsFieldExists($options, $name, $result){
