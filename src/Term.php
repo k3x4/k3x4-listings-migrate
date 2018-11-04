@@ -188,7 +188,7 @@ class Term{
                     'label' => 'Δωμάτια',
                     'placeholder' => 'Δωμάτια',
                     'prefix' => null,
-                    'suffix' => null,
+                    'suffix' => 'δωμ',
                     'default' => null
                 ]
             ],
