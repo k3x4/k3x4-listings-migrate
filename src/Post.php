@@ -113,7 +113,7 @@ class Post{
         foreach($postmeta as $meta){
             if($meta['key'] == 'webbupointfinder_item_images'){
                 $full = wp_get_attachment_image_src($meta['value'], 'full');
-                $thumb = wp_get_attachment_image_src($meta['value'], 'listing-thumb');
+                $thumb = wp_get_attachment_image_src($meta['value'], 'thumbnail');
                 $gallery = wp_get_attachment_image_src($meta['value'], 'listing-gallery');
                 
                 $images[$meta['value']] = [
