@@ -102,8 +102,12 @@ class Post{
         $oldFields = get_option('old_fields_migrate');
         foreach($postmeta as $meta){
             $metaKey = $meta['key'];
+            $metaValue = $meta['value'];
             if(isset($oldFields[$metaKey])){
-                add_post_meta($post_id, $oldFields[$metaKey], $meta['value']);
+                if($oldFields[$metaKey]['type'] == 'number'){
+                    $metaValue = intval($metaValue);
+                }
+                add_post_meta($post_id, $oldFields[$metaKey], $metaValue);
             }
         }
     }

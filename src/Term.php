@@ -265,7 +265,10 @@ class Term{
             ]);
             wp_set_object_terms($fieldId, $fieldGroupId, 'field_group');
 
-            $mapOldFields[$fieldArray['oldField']] = $fieldArray['id'];
+            $mapOldFields[$fieldArray['oldField']] = [
+                'id' => $fieldArray['id'],
+                'type' => $fieldArray['type'],
+            ];
         }
 
         add_option('old_fields_migrate', $mapOldFields);
