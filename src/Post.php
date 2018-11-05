@@ -107,7 +107,7 @@ class Post{
                 if($oldFields[$metaKey]['type'] == 'number'){
                     $metaValue = intval($metaValue);
                 }
-                add_post_meta($post_id, $oldFields[$metaKey], $metaValue);
+                add_post_meta($post_id, $oldFields[$metaKey]['id'], $metaValue);
             }
         }
     }
