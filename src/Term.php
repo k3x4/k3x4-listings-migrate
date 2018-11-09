@@ -48,14 +48,14 @@ class Term{
         ];
 
         $categoryIcons = [
-            'Auto - Moto'               => 'fa fa-truck',
-            'Ακίνητα'                   => 'fa fa-key',
-            'Εκπαίδευση'                => 'fa fa-graduation-cap',
-            'Επιχειρήσεις - Εξοπλισμός' => 'fa fa-coffee',
-            'Εργασία'                   => 'fa fa-euro',
-            'Πωλούνται'                 => 'fa fa-shopping-cart',
-            'Υπηρεσίες'                 => 'fa fa-cog',
-            'Χαρίζονται'                => 'fa fa-gift',
+            'Auto - Moto'               => 'truck',
+            'Ακίνητα'                   => 'key',
+            'Εκπαίδευση'                => 'graduation-cap',
+            'Επιχειρήσεις - Εξοπλισμός' => 'coffee',
+            'Εργασία'                   => 'euro',
+            'Πωλούνται'                 => 'shopping-cart',
+            'Υπηρεσίες'                 => 'cog',
+            'Χαρίζονται'                => 'gift',
         ];
 
         foreach($terms as $term){
@@ -115,7 +115,7 @@ class Term{
                 'oldField'  => 'webbupointfinder_item_field_proptype',
                 'type'      => 'select',
                 'id'        => 'real-estate_type',
-                'icon'      => 'fa fa-home',
+                'icon'      => 'home',
                 'options'   => [
                     'values' => [
                         '1' => 'Studio / Γκαρσονιέρα',
@@ -131,7 +131,7 @@ class Term{
                 'oldField'  => 'webbupointfinder_item_field283070149872418420000',
                 'type'      => 'number',
                 'id'        => 'real-estate_price',
-                'icon'      => 'fa fa-eur',
+                'icon'      => 'eur',
                 'options'   => [
                     'label' => 'Τιμή',
                     'placeholder' => 'Τιμή',
@@ -144,7 +144,7 @@ class Term{
                 'oldField'  => 'webbupointfinder_item_field70165663575622040000',
                 'type'      => 'select',
                 'id'        => 'real-estate_floor',
-                'icon'      => 'fa fa-sort',
+                'icon'      => 'sort',
                 'options'   => [
                     'values' => [
                         '1' => 'Υπόγειο',
@@ -170,7 +170,7 @@ class Term{
                 'oldField'  => 'webbupointfinder_item_field287084981110235630000',
                 'type'      => 'number',
                 'id'        => 'real-estate_size',
-                'icon'      => 'fa fa-arrows-alt',
+                'icon'      => 'arrows-alt',
                 'options'   => [
                     'label' => 'Τετρ. Μέτρα',
                     'placeholder' => 'Τετρ. Μέτρα',
@@ -183,7 +183,7 @@ class Term{
                 'oldField'  => 'webbupointfinder_item_field930250379806436500000',
                 'type'      => 'number',
                 'id'        => 'real-estate_rooms',
-                'icon'      => 'fa fa-building-o',
+                'icon'      => 'building-o',
                 'options'   => [
                     'label' => 'Δωμάτια',
                     'placeholder' => 'Δωμάτια',
@@ -196,7 +196,7 @@ class Term{
                 'oldField'  => 'webbupointfinder_item_field377217164104565400000',
                 'type'      => 'select',
                 'id'        => 'real-estate_heating',
-                'icon'      => 'fa fa-fire',
+                'icon'      => 'fire',
                 'options'   => [
                     'values' => [
                         '1' => 'Χωρίς Θέρμανση',
@@ -215,7 +215,7 @@ class Term{
                 'oldField'  => 'webbupointfinder_item_field454305059116910000000',
                 'type'      => 'text',
                 'id'        => 'real-estate_address',
-                'icon'      => 'fa fa-map-marker',
+                'icon'      => 'map-marker',
                 'options'   => [
                     'label' => 'Διεύθυνση',
                     'prefix' => null,
