@@ -59,7 +59,7 @@ class User
                 'ID' => $user_id,
                 'user_login' => $user['user_login'],
                 'user_pass' => $user['user_pass'],
-                'user_nicename' => 'user' . $user_id,
+                //'user_nicename' => 'user' . $user_id,
                 'user_email' => $user['user_email'],
                 'display_name' => $user['user_email'],
                 'nickname' => $user['user_email'],
