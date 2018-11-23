@@ -29,7 +29,6 @@ class WpCLI{
             $user->importUsers($importArray);
     
             //WP_CLI::success( 'Updated post title successfully.' );
-    
         } else {
             WP_CLI::error( 'Invalid arguments.' );
         }
